@@ -1,0 +1,1929 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🦆 Trò Chơi Bịt Mắt Bắt Vịt - GV Nguyễn Thị Thảo - Trường THCS Song Liễu</title>
+  <meta name="description" content="Trò chơi dân gian Bịt Mắt Bắt Vịt kết hợp câu hỏi ôn tập THCS - Game tạo bởi GV Nguyễn Thị Thảo - Trường THCS Song Liễu">
+  
+  <!-- Canvas Confetti CDN with offline fallback -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <!-- Complete Embedded Pure CSS - 100% Offline & GitHub Pages Bulletproof (No external Tailwind CDN dependency) -->
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    :root {
+      --primary: #d97706;
+      --primary-dark: #b45309;
+      --accent: #dc2626;
+      --bg: #fffbeb;
+      --text: #1e293b;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(180deg, #fef3c7 0%, #fffbeb 50%, #fef3c7 100%);
+      color: #1e293b;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+
+    /* TOP CREATOR BANNER */
+    .creator-banner {
+      background: linear-gradient(90deg, #b91c1c 0%, #d97706 50%, #b91c1c 100%);
+      color: #fef08a;
+      font-weight: 900;
+      font-size: 13px;
+      text-align: center;
+      padding: 8px 12px;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+      border-bottom: 2px solid #fde047;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    /* HEADER */
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 2px solid #fcd34d;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-icon {
+      font-size: 28px;
+    }
+    .brand-title {
+      font-size: 18px;
+      font-weight: 900;
+      color: #451a03;
+      line-height: 1.1;
+    }
+    .brand-sub {
+      font-size: 11px;
+      font-weight: 700;
+      color: #92400e;
+    }
+
+    /* IN-GAME HUD */
+    .game-hud {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      background: #fef3c7;
+      border: 1.5px solid #fcd34d;
+      border-radius: 16px;
+      padding: 6px 16px;
+    }
+    .hud-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .hud-label {
+      font-size: 9px;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: #92400e;
+      display: block;
+    }
+    .hud-val {
+      font-size: 18px;
+      font-weight: 900;
+      font-family: monospace;
+      color: #b45309;
+    }
+    .hud-divider {
+      color: #fcd34d;
+      font-weight: bold;
+    }
+
+    /* HEADER CONTROLS */
+    .btn-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-icon {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 8px 10px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-icon:hover {
+      background: #e2e8f0;
+      transform: translateY(-1px);
+    }
+    .btn-icon.primary {
+      background: #d97706;
+      color: #fff;
+      border-color: #b45309;
+    }
+
+    /* MAIN CONTAINER */
+    main {
+      flex: 1;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 1. START SCREEN */
+    #startScreen {
+      width: 100%;
+      max-width: 540px;
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 28px;
+      border: 4px solid #d97706;
+      box-shadow: 0 20px 40px rgba(180, 83, 9, 0.15);
+      padding: 28px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      margin: 16px 0;
+    }
+    .start-ribbon {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, #dc2626, #f59e0b, #10b981);
+    }
+    .start-duck-logo {
+      font-size: 64px;
+      margin-bottom: 4px;
+      display: inline-block;
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .start-title {
+      font-size: 32px;
+      font-weight: 900;
+      color: #451a03;
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+    .teacher-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(90deg, #d97706, #ea580c);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 999px;
+      box-shadow: 0 4px 10px rgba(234, 88, 12, 0.3);
+      margin-bottom: 16px;
+    }
+    .rule-pill {
+      background: #dc2626;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 999px;
+      display: inline-block;
+      margin-bottom: 16px;
+    }
+    .form-group {
+      text-align: left;
+      margin-bottom: 14px;
+    }
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 800;
+      color: #475569;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 14px;
+      border: 2px solid #cbd5e1;
+      font-size: 16px;
+      font-weight: 700;
+      outline: none;
+      transition: border 0.15s;
+    }
+    .form-input:focus {
+      border-color: #d97706;
+      box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2);
+    }
+    .btn-start {
+      width: 100%;
+      padding: 15px;
+      margin-top: 10px;
+      background: linear-gradient(90deg, #d97706, #ea580c, #b45309);
+      color: #fff;
+      font-size: 20px;
+      font-weight: 900;
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(234, 88, 12, 0.35);
+      transition: all 0.15s;
+    }
+    .btn-start:hover {
+      filter: brightness(1.06);
+      transform: translateY(-2px);
+    }
+    .btn-start:active {
+      transform: translateY(1px);
+    }
+    .start-hints {
+      margin-top: 16px;
+      font-size: 12px;
+      color: #64748b;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 12px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    /* 2. GAME ARENA */
+    #gameArena {
+      display: none;
+      width: 100%;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .arena-info-bar {
+      width: 100%;
+      background: linear-gradient(90deg, #fef3c7, #fffbeb);
+      border: 1.5px solid #fcd34d;
+      border-radius: 16px;
+      padding: 8px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #451a03;
+    }
+    .player-tag-badge {
+      background: #d97706;
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 8px;
+      font-size: 11px;
+      margin-left: 6px;
+      font-family: monospace;
+    }
+    .duck-counter-badge {
+      background: #dc2626;
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 900;
+      margin-right: 4px;
+    }
+
+    /* CANVAS CONTAINER */
+    .canvas-container {
+      width: 100%;
+      height: 60vh;
+      min-height: 400px;
+      max-height: 720px;
+      position: relative;
+      border-radius: 24px;
+      border: 4px solid #8c531b;
+      box-shadow: 0 16px 36px rgba(0,0,0,0.22);
+      overflow: hidden;
+      background-color: #3b7a27;
+    }
+    #gameCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: crosshair;
+    }
+
+    /* VISION SELECTOR OVERLAY */
+    .vision-overlay {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(6px);
+      padding: 6px 10px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      z-index: 10;
+    }
+    .btn-vision {
+      padding: 4px 8px;
+      border-radius: 8px;
+      border: none;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.2);
+      color: #e2e8f0;
+      transition: all 0.15s;
+    }
+    .btn-vision.active {
+      background: #f59e0b;
+      color: #451a03;
+    }
+
+    /* D-PAD TOUCH CONTROLS (MOBILE) */
+    #touchControls {
+      display: none;
+      width: 100%;
+      max-width: 320px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      padding: 8px;
+      background: rgba(254, 243, 199, 0.95);
+      border-radius: 16px;
+      border: 1.5px solid #fcd34d;
+      margin-top: 6px;
+    }
+    .btn-dpad {
+      padding: 14px;
+      background: #d97706;
+      color: #fff;
+      font-size: 20px;
+      font-weight: 900;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+      cursor: pointer;
+      user-select: none;
+    }
+    .btn-dpad:active {
+      background: #b45309;
+      transform: scale(0.95);
+    }
+
+    /* DUCK BADGES STATUS */
+    .duck-status-panel {
+      width: 100%;
+      background: #ffffff;
+      border: 1.5px solid #fcd34d;
+      border-radius: 18px;
+      padding: 10px 14px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+    .duck-status-title {
+      font-size: 11px;
+      font-weight: 900;
+      color: #78350f;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .duck-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+      gap: 4px;
+      max-height: 85px;
+      overflow-y: auto;
+      padding: 2px;
+    }
+    .duck-pill {
+      font-size: 9px;
+      font-weight: 800;
+      text-align: center;
+      padding: 3px 0;
+      border-radius: 6px;
+      border: 1px solid #fcd34d;
+      background: #fef3c7;
+      color: #78350f;
+    }
+    .duck-pill.caught {
+      background: #10b981;
+      border-color: #059669;
+      color: #ffffff;
+    }
+
+    /* QUESTION MODAL */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(6px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-card {
+      width: 100%;
+      max-width: 620px;
+      background: #ffffff;
+      border-radius: 28px;
+      border: 4px solid #f59e0b;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      animation: popIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes popIn {
+      from { transform: scale(0.92); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .modal-header {
+      background: linear-gradient(90deg, #d97706, #ea580c, #b45309);
+      color: #fff;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .modal-duck-badge {
+      width: 48px;
+      height: 48px;
+      background: #dc2626;
+      border: 2px solid #ffffff;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 900;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .modal-title-box {
+      margin-left: 12px;
+      flex: 1;
+    }
+    .modal-tag {
+      font-size: 11px;
+      font-weight: 900;
+      background: rgba(185, 28, 28, 0.8);
+      padding: 2px 8px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+    .modal-subject {
+      font-size: 15px;
+      font-weight: 800;
+      color: #fef08a;
+      margin-top: 2px;
+    }
+    .modal-points {
+      background: rgba(120, 53, 15, 0.7);
+      border: 1px solid rgba(252, 211, 77, 0.4);
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 900;
+      color: #fef08a;
+    }
+    .modal-body {
+      padding: 20px 24px;
+    }
+    .question-label {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #92400e;
+      margin-bottom: 6px;
+    }
+    .question-content {
+      font-size: 19px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.4;
+      margin-bottom: 20px;
+    }
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    @media (min-width: 600px) {
+      .options-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      #touchControls {
+        display: none !important;
+      }
+    }
+    .btn-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 2px solid #e2e8f0;
+      background: #fffbeb;
+      font-size: 14px;
+      font-weight: 700;
+      color: #1e293b;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s;
+    }
+    .btn-option:hover:not(:disabled) {
+      background: #fef3c7;
+      border-color: #f59e0b;
+      transform: translateY(-1px);
+    }
+    .opt-letter {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: #475569;
+      flex-shrink: 0;
+    }
+    .btn-option.correct {
+      border-color: #10b981;
+      background: #ecfdf5;
+      color: #064e3b;
+      font-weight: 900;
+    }
+    .btn-option.wrong {
+      border-color: #ef4444;
+      background: #fef2f2;
+      color: #7f1d1d;
+      font-weight: 900;
+    }
+    .btn-option.dimmed {
+      opacity: 0.35;
+    }
+    .feedback-box {
+      display: none;
+      padding: 12px 16px;
+      border-radius: 14px;
+      margin-bottom: 14px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+    .feedback-box.correct {
+      background: #ecfdf5;
+      border: 1.5px solid #34d399;
+      color: #065f46;
+    }
+    .feedback-box.wrong {
+      background: #fef2f2;
+      border: 1.5px solid #f87171;
+      color: #991b1b;
+    }
+    .btn-continue {
+      display: none;
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(90deg, #059669, #0d9488);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 900;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      box-shadow: 0 6px 14px rgba(5, 150, 105, 0.3);
+    }
+
+    /* FOOTER */
+    footer {
+      background: rgba(254, 243, 199, 0.9);
+      border-top: 1.5px solid #fcd34d;
+      padding: 10px;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: #78350f;
+    }
+
+    @media (max-width: 600px) {
+      .brand-title { font-size: 15px; }
+      .start-title { font-size: 26px; }
+      .canvas-container { height: 50vh; min-height: 340px; }
+      #touchControls { display: grid; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP CREATOR BANNER -->
+  <div class="creator-banner">
+    <span>⭐</span>
+    <span>Game tạo bởi GV Nguyễn Thị Thảo - Trường THCS Song Liễu</span>
+    <span>⭐</span>
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="brand">
+      <span class="brand-icon">🦆</span>
+      <div>
+        <div class="brand-title">BỊT MẮT BẮT VỊT</div>
+        <div class="brand-sub">GV Nguyễn Thị Thảo - Trường THCS Song Liễu</div>
+      </div>
+    </div>
+
+    <!-- Active In-Game HUD -->
+    <div id="gameHud" class="game-hud">
+      <div class="hud-item">
+        <span style="font-size: 18px;">🏆</span>
+        <div>
+          <span class="hud-label">Tổng điểm</span>
+          <span id="hudScore" class="hud-val">0</span><span style="font-size: 11px; font-weight: bold; color: #92400e;"> đ</span>
+        </div>
+      </div>
+      <span class="hud-divider">|</span>
+      <div class="hud-item">
+        <span style="font-size: 18px;">🦆</span>
+        <div>
+          <span class="hud-label">Còn lại</span>
+          <span id="hudDucks" class="hud-val" style="color: #1e293b;">50/50</span>
+        </div>
+      </div>
+      <span class="hud-divider">|</span>
+      <div class="hud-item">
+        <span style="font-size: 18px;">⏱️</span>
+        <div>
+          <span class="hud-label">Thời gian</span>
+          <span id="hudTimer" class="hud-val" style="color: #1e293b;">05:00</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Controls -->
+    <div class="btn-group">
+      <button id="btnDownloadHtml" class="btn-icon" style="background: #dc2626; color: #fff; font-weight: 800; font-size: 12px;" title="Tải file HTML về máy (Mở chơi trực tiếp)">📥 Tải HTML</button>
+      <button id="btnDownloadGithub" class="btn-icon" style="background: #059669; color: #fff; font-weight: 800; font-size: 12px;" title="Tải file index.html cho GitHub Pages">🌐 Cho GitHub</button>
+      <button id="btnSound" class="btn-icon" title="Bật/Tắt âm thanh">🔊</button>
+      <button id="btnRules" class="btn-icon" title="Luật chơi">📖</button>
+      <button id="btnLeaderboard" class="btn-icon" title="Bảng xếp hạng">🏆</button>
+      <button id="btnHome" class="btn-icon primary" style="display: none;" title="Về trang chủ">🏠</button>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+
+    <!-- 1. START SCREEN -->
+    <div id="startScreen">
+      <div class="start-ribbon"></div>
+      <div class="start-duck-logo">🦆</div>
+      <h1 class="start-title">BỊT MẮT BẮT VỊT</h1>
+
+      <div class="teacher-badge">
+        <span>✨</span>
+        <span>Game tạo bởi GV Nguyễn Thị Thảo - Trường THCS Song Liễu</span>
+        <span>✨</span>
+      </div>
+
+      <div style="margin-bottom: 12px;">
+        <span class="rule-pill">🦆 50 CHÚ VỊT SỐ 1 - 50 · +10 ĐIỂM/CÂU ĐÚNG</span>
+      </div>
+
+      <form id="startForm">
+        <div class="form-group">
+          <label class="form-label" for="inputPlayerName">👤 Họ và tên người chơi:</label>
+          <input type="text" id="inputPlayerName" class="form-input" placeholder="Ví dụ: Nguyễn Văn An" required autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="inputClassName">🎓 Lớp học:</label>
+          <input type="text" id="inputClassName" class="form-input" placeholder="Ví dụ: 7A, 8B, 6C, 9D..." required autocomplete="off">
+        </div>
+
+        <button type="submit" class="btn-start">
+          ▶️ BẮT ĐẦU BẮT VỊT
+        </button>
+      </form>
+
+      <div class="start-hints">
+        <span>🎮 Di chuyển: Phím W-A-S-D hoặc Mũi tên</span>
+        <span>•</span>
+        <span>📱 Chạm màn hình để đi tới</span>
+      </div>
+
+      <!-- Quick Download & Copy Options on Start Screen -->
+      <div style="margin-top: 14px; padding: 12px; background: #fef3c7; border: 1.5px solid #fcd34d; border-radius: 16px; text-align: center;">
+        <div style="font-size: 11px; font-weight: 900; color: #92400e; text-transform: uppercase; margin-bottom: 8px;">
+          💾 TẢI FILE CHƠI OFFLINE & ĐƯA LÊN GITHUB:
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;">
+          <button type="button" onclick="downloadCurrentHtml('tro_choi_bit_mat_bat_vit.html')" class="btn-icon" style="background: #dc2626; color: #fff; font-size: 12px; font-weight: 800; padding: 7px 12px;">
+            📥 Tải file HTML về máy
+          </button>
+          <button type="button" onclick="downloadCurrentHtml('index.html')" class="btn-icon" style="background: #059669; color: #fff; font-size: 12px; font-weight: 800; padding: 7px 12px;">
+            🌐 Cho GitHub (index.html)
+          </button>
+          <button type="button" onclick="copyHtmlCode(this)" class="btn-icon" style="background: #475569; color: #fff; font-size: 12px; font-weight: 800; padding: 7px 12px;">
+            📋 Sao chép mã HTML
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. GAME ARENA -->
+    <div id="gameArena">
+      <!-- Player Banner -->
+      <div class="arena-info-bar">
+        <div>
+          <span>🟢 Người chơi: <strong id="arenaPlayerName" style="color: #78350f; font-size: 15px;">Học sinh</strong> (<span id="arenaClassName">7A</span>)</span>
+          <span id="arenaScoreTag" class="player-tag-badge">0 điểm</span>
+        </div>
+        <div>
+          <span class="duck-counter-badge">50 VỊT SỐ 1 - 50</span>
+          <span>Bắt trúng vịt nào, câu hỏi vịt đó sẽ hiện lên!</span>
+        </div>
+      </div>
+
+      <!-- Canvas Box -->
+      <div class="canvas-container">
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- Vision overlay -->
+        <div class="vision-overlay">
+          <span>Tầm nhìn:</span>
+          <button id="btnVisionSemi" class="btn-vision active">Sương mù</button>
+          <button id="btnVisionClear" class="btn-vision">Nhìn rõ</button>
+          <button id="btnVisionFull" class="btn-vision">Bịt kín</button>
+        </div>
+      </div>
+
+      <!-- Mobile Touch Controls -->
+      <div id="touchControls">
+        <div></div>
+        <button id="touchUp" class="btn-dpad">⬆️</button>
+        <div></div>
+        <button id="touchLeft" class="btn-dpad">⬅️</button>
+        <button id="touchDown" class="btn-dpad">⬇️</button>
+        <button id="touchRight" class="btn-dpad">➡️</button>
+      </div>
+
+      <!-- Duck Status Grid -->
+      <div class="duck-status-panel">
+        <div class="duck-status-title">
+          <span>🦆 Trạng thái 50 chú vịt (Đã bắt: <span id="ducksCaughtCount">0</span>/50):</span>
+          <span style="font-weight: 600; color: #64748b; text-transform: none;">Xanh = Đã bắt & đúng 10đ · Vàng = Đang bơi</span>
+        </div>
+        <div id="duckBadgesGrid" class="duck-grid"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- QUESTION MODAL -->
+  <div id="questionModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center;">
+          <div id="qModalDuckBadge" class="modal-duck-badge">#1</div>
+          <div class="modal-title-box">
+            <span id="qModalDuckTag" class="modal-tag">CÂU HỎI CHÚ VỊT SỐ #1</span>
+            <div id="qModalSubject" class="modal-subject">Môn: Khoa học tự nhiên</div>
+          </div>
+        </div>
+        <div class="modal-points">⭐ Đúng +10 điểm</div>
+      </div>
+
+      <div class="modal-body">
+        <div class="question-label">Nội dung câu hỏi:</div>
+        <div id="qModalContent" class="question-content">Đang tải câu hỏi...</div>
+
+        <div id="qModalOptions" class="options-grid"></div>
+
+        <div id="qModalFeedback" class="feedback-box"></div>
+
+        <button id="qModalContinueBtn" class="btn-continue">
+          TIẾP TỤC BẮT VỊT ➡️
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RULES MODAL -->
+  <div id="rulesModal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 520px; padding: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #fde047; padding-bottom: 10px; margin-bottom: 12px;">
+        <h2 style="font-size: 20px; font-weight: 900; color: #78350f;">📖 LUẬT CHƠI BỊT MẮT BẮT VỊT</h2>
+        <button onclick="document.getElementById('rulesModal').style.display = 'none'" class="btn-icon">✕</button>
+      </div>
+      <div style="font-size: 14px; line-height: 1.6; color: #334155; margin-bottom: 18px;">
+        <p style="margin-bottom: 8px;">🦆 <strong>1.</strong> Sân chơi có <strong>50 chú vịt</strong> mang số hiệu từ <strong>1 đến 50</strong> chạy tự do.</p>
+        <p style="margin-bottom: 8px;">👤 <strong>2.</strong> Người bắt vịt đeo khăn đỏ bịt mắt, hai tay quờ quạng tìm vịt trong sân đất làng quê.</p>
+        <p style="margin-bottom: 8px;">❓ <strong>3.</strong> Khi chạm bắt được chú vịt số nào, câu hỏi kiến thức THCS của chú vịt đó sẽ hiện lên.</p>
+        <p style="margin-bottom: 8px;">⭐ <strong>4.</strong> Mỗi câu trả lời đúng được cộng <strong>+10 điểm</strong>. Nếu sai, chú vịt sẽ kêu cạp cạp và chạy thoát!</p>
+        <p style="margin-bottom: 8px;">🏆 <strong>5.</strong> Mục tiêu: Bắt nhiều vịt nhất và đạt điểm số tối đa trong 5 phút!</p>
+      </div>
+      <button onclick="document.getElementById('rulesModal').style.display = 'none'" class="btn-start" style="padding: 10px; font-size: 16px;">
+        ĐÃ HIỂU, ĐÓNG LẠI
+      </button>
+    </div>
+  </div>
+
+  <!-- LEADERBOARD MODAL -->
+  <div id="leaderboardModal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 500px; padding: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #fde047; padding-bottom: 10px; margin-bottom: 12px;">
+        <h2 style="font-size: 20px; font-weight: 900; color: #78350f;">🏆 BẢNG VÀNG THÀNH TÍCH</h2>
+        <button onclick="document.getElementById('leaderboardModal').style.display = 'none'" class="btn-icon">✕</button>
+      </div>
+      <div id="leaderboardList" style="max-height: 280px; overflow-y: auto; margin-bottom: 16px; display: flex; flex-direction: column; gap: 6px;"></div>
+      <button onclick="document.getElementById('leaderboardModal').style.display = 'none'" class="btn-start" style="padding: 10px; font-size: 16px;">
+        ĐÓNG
+      </button>
+    </div>
+  </div>
+
+  <!-- GAME OVER MODAL -->
+  <div id="gameOverModal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 440px; padding: 28px; text-align: center;">
+      <div style="font-size: 56px; margin-bottom: 6px;">🎉</div>
+      <h2 style="font-size: 24px; font-weight: 900; color: #78350f; margin-bottom: 4px;">HẾT GIỜ BẮT VỊT!</h2>
+      <p id="gameOverPlayer" style="font-size: 14px; font-weight: 700; color: #64748b; margin-bottom: 14px;">Người chơi: Nguyễn Văn An (7A)</p>
+
+      <div style="background: #fef3c7; border: 2px solid #fcd34d; border-radius: 16px; padding: 14px; margin-bottom: 16px;">
+        <div style="font-size: 11px; font-weight: 900; color: #92400e; text-transform: uppercase;">Tổng điểm đạt được</div>
+        <div id="gameOverScore" style="font-size: 38px; font-weight: 900; color: #d97706; font-family: monospace; margin: 4px 0;">0 ĐIỂM</div>
+        <div id="gameOverDetail" style="font-size: 12px; font-weight: 700; color: #475569;">Đúng 0/50 câu (+10đ / câu đúng)</div>
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <button id="btnPlayAgain" class="btn-start" style="flex: 1; padding: 12px; font-size: 16px;">🔄 CHƠI LẠI</button>
+        <button onclick="document.getElementById('gameOverModal').style.display = 'none'; showStartScreen();" class="btn-icon" style="flex: 1; padding: 12px; font-size: 16px; background: #334155; color: #fff;">🏠 TRANG CHỦ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    Game tạo bởi GV Nguyễn Thị Thảo - Trường THCS Song Liễu · Trò chơi dân gian kết hợp ôn tập kiến thức THCS
+  </footer>
+
+  <!-- SCRIPT ENGINE -->
+  <script>
+    // --- 1. BULLETPROOF DRAWING HELPERS (100% Canvas Safe across iOS, Android, Safari, Chrome) ---
+    function drawSafeRoundRect(ctx, x, y, w, h, r) {
+      if (r > w / 2) r = w / 2;
+      if (r > h / 2) r = h / 2;
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+    }
+
+    function drawSafeEllipse(ctx, cx, cy, rx, ry) {
+      if (typeof ctx.ellipse === 'function') {
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+      } else {
+        ctx.save();
+        ctx.beginPath();
+        ctx.translate(cx, cy);
+        ctx.scale(rx, ry);
+        ctx.arc(0, 0, 1, 0, Math.PI * 2);
+        ctx.restore();
+      }
+    }
+
+    // --- 2. 50 CURATED THCS QUESTIONS (GRADES 6 - 9) ---
+    const QUESTIONS_BANK = [
+      { id: 1, subject: "Khoa học tự nhiên", content: "Dụng cụ nào sau đây dùng để đo nhiệt độ?", options: ["Cân điện tử", "Nhiệt kế", "Đồng hồ bấm giây", "Thước cuộn"], correct: 1, exp: "Nhiệt kế là dụng cụ chuyên dùng để đo nhiệt độ." },
+      { id: 2, subject: "Khoa học tự nhiên", content: "Quá trình quang hợp ở thực vật diễn ra chủ yếu ở bào quan nào?", options: ["Ti thể", "Không bào", "Lục lạp", "Nhân tế bào"], correct: 2, exp: "Lục lạp chứa chất diệp lục hấp thụ ánh sáng để quang hợp." },
+      { id: 3, subject: "Toán học", content: "Số nguyên tố nhỏ nhất và cũng là số chẵn duy nhất là số nào?", options: ["0", "1", "2", "3"], correct: 2, exp: "Số 2 là số nguyên tố nhỏ nhất và là số chẵn duy nhất." },
+      { id: 4, subject: "Vật lý", content: "Đơn vị đo lực trong hệ đo lường quốc tế (SI) là gì?", options: ["Jun (J)", "Oát (W)", "Niutơn (N)", "Pascan (Pa)"], correct: 2, exp: "Niutơn (N) là đơn vị đo lực trong hệ SI." },
+      { id: 5, subject: "Hóa học", content: "Ký hiệu hóa học của nguyên tố Oxi là gì?", options: ["O", "Ox", "O2", "Om"], correct: 0, exp: "Ký hiệu hóa học của nguyên tố Oxi là O." },
+      { id: 6, subject: "Ngữ văn", content: "Tác giả của bài thơ 'Đồng chí' là ai?", options: ["Phạm Tiến Duật", "Chính Hữu", "Huy Cận", "Bằng Việt"], correct: 1, exp: "Bài thơ 'Đồng chí' được nhà thơ Chính Hữu sáng tác năm 1948." },
+      { id: 7, subject: "Lịch sử", content: "Chiến thắng Bạch Đằng năm 938 do ai lãnh đạo?", options: ["Đinh Bộ Lĩnh", "Lý Thường Kiệt", "Ngô Quyền", "Trần Hưng Đạo"], correct: 2, exp: "Ngô Quyền lãnh đạo nhân dân đánh tan quân Nam Hán trên sông Bạch Đằng năm 938." },
+      { id: 8, subject: "Địa lý", content: "Đỉnh núi cao nhất Việt Nam và được mệnh danh là nóc nhà Đông Dương là đỉnh nào?", options: ["Bà Đen", "Fansipan", "Tây Côn Lĩnh", "Bạch Mộc Lương Tử"], correct: 1, exp: "Fansipan cao 3.143m thuộc dãy Hoàng Liên Sơn." },
+      { id: 9, subject: "Tiếng Anh", content: "Từ nào sau đây là danh từ số nhiều bất quy tắc của từ 'child'?", options: ["Childs", "Children", "Childrens", "Childes"], correct: 1, exp: "Số nhiều của 'child' là 'children'." },
+      { id: 10, subject: "Tin học", content: "Phím tắt dùng để sao chép (Copy) văn bản trong hệ điều hành Windows là gì?", options: ["Ctrl + C", "Ctrl + V", "Ctrl + X", "Ctrl + Z"], correct: 0, exp: "Ctrl + C dùng để sao chép, Ctrl + V dùng để dán." },
+      { id: 11, subject: "Giáo dục công dân", content: "Hành vi nào sau đây thể hiện tính tự lập của học sinh?", options: ["Nhờ bạn làm hộ bài tập", "Tự giác ôn bài và chuẩn bị sách vở", "Đi học muộn", "Bỏ học đi chơi điện tử"], correct: 1, exp: "Tự giác học tập và chuẩn bị bài là biểu hiện của tính tự lập." },
+      { id: 12, subject: "Toán học", content: "Tổng ba góc trong một tam giác bằng bao nhiêu độ?", options: ["90°", "180°", "270°", "360°"], correct: 1, exp: "Tổng ba góc trong một tam giác luôn bằng 180°." },
+      { id: 13, subject: "Khoa học tự nhiên", content: "Chất khí nào chiếm thể tích lớn nhất trong không khí?", options: ["Khí Oxi", "Khí Nitơ", "Khí Cacbonic", "Khí Hiđro"], correct: 1, exp: "Khí Nitơ (N2) chiếm khoảng 78% thể tích không khí." },
+      { id: 14, subject: "Sinh học", content: "Cơ quan nào có chức năng bơm máu đi khắp cơ thể?", options: ["Phổi", "Dạ dày", "Tim", "Gan"], correct: 2, exp: "Tim co bóp như một chiếc bơm đẩy máu qua hệ tuần hoàn." },
+      { id: 15, subject: "Lịch sử", content: "Bác Hồ đọc Tuyên ngôn Độc lập khai sinh ra nước Việt Nam Dân chủ Cộng hòa vào ngày nào?", options: ["19/8/1945", "2/9/1945", "30/4/1975", "7/5/1954"], correct: 1, exp: "Ngày 2/9/1945 tại Quảng trường Ba Đình lịch sử." },
+      { id: 16, subject: "Vật lý", content: "Âm thanh truyền nhanh nhất trong môi trường nào sau đây?", options: ["Chất khí", "Chất lỏng", "Chất rắn", "Chân không"], correct: 2, exp: "Tốc độ truyền âm: Chất rắn > Chất lỏng > Chất khí. Âm không truyền được trong chân không." },
+      { id: 17, subject: "Hóa học", content: "Công thức hóa học của nước tinh khiết là gì?", options: ["H2O", "CO2", "NaCl", "O2"], correct: 0, exp: "Nước được cấu tạo từ 2 nguyên tử H và 1 nguyên tử O (H2O)." },
+      { id: 18, subject: "Ngữ văn", content: "Bài thơ 'Lượm' của nhà thơ Tố Hữu viết về hình ảnh ai?", options: ["Người mẹ bộ đội", "Chú bé liên lạc dũng cảm", "Người thầy giáo", "Cô công nhân"], correct: 1, exp: "Lượm là chú bé liên lạc nhỏ bé, hồn nhiên và dũng cảm." },
+      { id: 19, subject: "Địa lý", content: "Thủ đô của nước Cộng hòa Xã hội Chủ nghĩa Việt Nam là thành phố nào?", options: ["Đà Nẵng", "TP. Hồ Chí Minh", "Hải Phòng", "Hà Nội"], correct: 3, exp: "Hà Nội là thủ đô của Việt Nam." },
+      { id: 20, subject: "Toán học", content: "Kết quả của phép tính (-5) + (-7) là bao nhiêu?", options: ["12", "-12", "-2", "2"], correct: 1, exp: "(-5) + (-7) = -(5 + 7) = -12." },
+      { id: 21, subject: "Khoa học tự nhiên", content: "Nhiệt kế y tế thường dùng chất lỏng nào có màu ánh bạc để đo?", options: ["Nước", "Cồn", "Thủy ngân", "Dầu ăn"], correct: 2, exp: "Thủy ngân nở vì nhiệt đều đặn và có màu ánh bạc dễ nhìn." },
+      { id: 22, subject: "Sinh học", content: "Động vật nào sau đây là động vật biến nhiệt?", options: ["Chim bồ câu", "Cá chép", "Chó", "Mèo"], correct: 1, exp: "Cá chép thuộc lớp Cá, là động vật biến nhiệt." },
+      { id: 23, subject: "Hóa học", content: "Muối ăn hàng ngày có thành phần hóa học chính là gì?", options: ["CaCO3", "NaCl", "CuSO4", "Fe2O3"], correct: 1, exp: "Muối ăn chính là Natri clorua (NaCl)." },
+      { id: 24, subject: "Vật lý", content: "Dòng điện là dòng chuyển dời có hướng của các hạt nào trong kim loại?", options: ["Nguyên tử", "Phân tử", "Các electron tự do", "Các ion dương"], correct: 2, exp: "Trong kim loại, dòng điện là dòng chuyển dời có hướng của các electron tự do." },
+      { id: 25, subject: "Lịch sử", content: "Kinh đô của nước Âu Lạc thời An Dương Vương đóng ở đâu?", options: ["Hoa Lư", "Cổ Loa (Đông Anh, Hà Nội)", "Phú Xuân", "Thăng Long"], correct: 1, exp: "Thành Cổ Loa hình xoáy ốc là kinh đô thời Âu Lạc." },
+      { id: 26, subject: "Địa lý", content: "Biển Đông tiếp giáp với bờ biển phía nào của lãnh thổ đất liền Việt Nam?", options: ["Phía Tây", "Phía Đông và Nam", "Phía Bắc", "Phía Tây Bắc"], correct: 1, exp: "Việt Nam có bờ biển dài tiếp giáp phía Đông và Nam với Biển Đông." },
+      { id: 27, subject: "Ngữ văn", content: "Truyện cổ tích nào giải thích nguồn gốc bánh chưng bánh giầy ngày Tết?", options: ["Thánh Gióng", "Bánh chưng bánh giầy (Lang Liêu)", "Sơn Tinh Thủy Tinh", "Sự tích cây vú sữa"], correct: 1, exp: "Chàng Lang Liêu làm bánh chưng hình vuông và bánh giầy hình tròn dâng vua cha." },
+      { id: 28, subject: "Toán học", content: "Diện tích hình chữ nhật có chiều dài 8cm và chiều rộng 5cm là bao nhiêu?", options: ["13 cm²", "26 cm²", "40 cm²", "80 cm²"], correct: 2, exp: "Diện tích S = dài x rộng = 8 x 5 = 40 cm²." },
+      { id: 29, subject: "Tiếng Anh", content: "Từ trái nghĩa với từ 'beautiful' trong tiếng Anh là gì?", options: ["Pretty", "Ugly", "Nice", "Clean"], correct: 1, exp: "Beautiful (xinh đẹp) >< Ugly (xấu xí)." },
+      { id: 30, subject: "Tin học", content: "Trang web tìm kiếm thông tin phổ biến nhất thế giới hiện nay là gì?", options: ["Google", "Excel", "PowerPoint", "Word"], correct: 0, exp: "Google là công cụ tìm kiếm phổ biến nhất thế giới." },
+      { id: 31, subject: "Giáo dục công dân", content: "Độ tuổi tối thiểu chịu trách nhiệm hình sự về mọi tội phạm theo luật Việt Nam là bao nhiêu?", options: ["14 tuổi", "16 tuổi", "18 tuổi", "20 tuổi"], correct: 1, exp: "Từ đủ 16 tuổi trở lên phải chịu trách nhiệm hình sự về mọi tội phạm." },
+      { id: 32, subject: "Vật lý", content: "Hiện tượng khúc xạ ánh sáng là hiện tượng tia sáng bị làm sao khi truyền qua mặt phân cách?", options: ["Bị phản xạ trở lại", "Bị gãy khúc", "Bị hút vào", "Bị biến mất"], correct: 1, exp: "Tia sáng bị gãy khúc tại mặt phân cách giữa hai môi trường trong suốt." },
+      { id: 33, subject: "Khoa học tự nhiên", content: "Hành tinh nào gần Mặt Trời nhất trong Hệ Mặt Trời?", options: ["Sao Kim", "Sao Thủy (Mercury)", "Trái Đất", "Sao Hỏa"], correct: 1, exp: "Sao Thủy là hành tinh nằm gần Mặt Trời nhất." },
+      { id: 34, subject: "Sinh học", content: "Loài chim nào lớn nhất hiện nay còn tồn tại trên Trái Đất?", options: ["Đà điểu châu Phi", "Chim ưng", "Hải âu", "Chim cánh cụt hoàng đế"], correct: 0, exp: "Đà điểu châu Phi là loài chim lớn nhất hành tinh." },
+      { id: 35, subject: "Toán học", content: "Đa giác có 6 cạnh được gọi là hình gì?", options: ["Tứ giác", "Ngũ giác", "Lục giác", "Bát giác"], correct: 2, exp: "Lục giác là hình đa giác có 6 cạnh." },
+      { id: 36, subject: "Ngữ văn", content: "Trong truyện ngụ ngôn 'Ếch ngồi đáy giếng', bài học chính rút ra là gì?", options: ["Tránh thói kiêu ngạo, tầm nhìn hạn hẹp", "Phải biết bơi giỏi", "Nên sống ở nơi ẩm ướt", "Không nên kêu to"], correct: 0, exp: "Truyện khuyên người ta không nên tự phụ, huênh hoang với tầm nhìn hạn hẹp." },
+      { id: 37, subject: "Tiếng Anh", content: "Thì quá khứ đơn của động từ 'go' là gì?", options: ["Goed", "Gone", "Went", "Going"], correct: 2, exp: "Quá khứ đơn của động từ 'go' là 'went'." },
+      { id: 38, subject: "Tin học", content: "Bộ phận nào được coi là 'bộ não' điều khiển máy tính?", options: ["Màn hình (Monitor)", "CPU (Bộ vi xử lý)", "Chuột (Mouse)", "Bàn phím (Keyboard)"], correct: 1, exp: "CPU (Central Processing Unit) là bộ vi xử lý trung tâm." },
+      { id: 39, subject: "Lịch sử", content: "Ai là tác giả của 'Hịch tướng sĩ' khích lệ quân sĩ thời Trần?", options: ["Trần Thủ Độ", "Trần Hưng Đạo (Trần Quốc Tuấn)", "Trần Nhân Tông", "Trần Quang Khải"], correct: 1, exp: "Hưng Đạo Đại Vương Trần Quốc Tuấn soạn Hịch tướng sĩ." },
+      { id: 40, subject: "Địa lý", content: "Châu lục nào có diện tích lớn nhất trên Trái Đất?", options: ["Châu Phi", "Châu Mỹ", "Châu Á", "Châu Âu"], correct: 2, exp: "Châu Á có diện tích rộng nhất thế giới (khoảng 44,58 triệu km²)." },
+      { id: 41, subject: "Khoa học tự nhiên", content: "Nhiệt độ sôi của nước tinh khiết ở áp suất khí quyển tiêu chuẩn là bao nhiêu?", options: ["50°C", "80°C", "100°C", "120°C"], correct: 2, exp: "Ở áp suất tiêu chuẩn (1 atm), nước tinh khiết sôi ở 100°C." },
+      { id: 42, subject: "Vật lý", content: "Năng lượng mà vật có được do chuyển động được gọi là gì?", options: ["Thế năng", "Động năng", "Hóa năng", "Quang năng"], correct: 1, exp: "Động năng là dạng năng lượng gắn liền với chuyển động của vật thể." },
+      { id: 43, subject: "Toán học", content: "Số 0 là số nguyên dương hay số nguyên âm?", options: ["Số nguyên dương", "Số nguyên âm", "Không là số nguyên dương cũng không là số nguyên âm", "Vừa là số dương vừa là số âm"], correct: 2, exp: "Số 0 không phải là số nguyên dương và cũng không phải số nguyên âm." },
+      { id: 44, subject: "Hóa học", content: "Kim loại nào dẫn điện tốt nhất trong các kim loại sau?", options: ["Đồng (Cu)", "Bạc (Ag)", "Nhôm (Al)", "Sắt (Fe)"], correct: 1, exp: "Bạc dẫn điện tốt nhất, sau đó đến Đồng, Vàng, Nhôm." },
+      { id: 45, subject: "Sinh học", content: "Cơ quan nào trong cơ thể người có chức năng lọc máu tạo nước tiểu?", options: ["Tim", "Gan", "Thận", "Dạ dày"], correct: 2, exp: "Thận đảm nhận chức năng lọc máu và bài tiết các chất thải ra ngoài." },
+      { id: 46, subject: "Hóa học", content: "Dung dịch làm quỳ tím hóa đỏ là dung dịch nào?", options: ["Dung dịch Axit", "Dung dịch Bazơ", "Nước cất", "Dung dịch Muối ăn"], correct: 0, exp: "Dung dịch Axit làm quỳ tím hóa đỏ, Bazơ làm quỳ tím hóa xanh." },
+      { id: 47, subject: "Lịch sử", content: "Chiến dịch Điện Biên Phủ giành toàn thắng vào năm nào?", options: ["Năm 1945", "Năm 1954", "Năm 1972", "Năm 1975"], correct: 1, exp: "Ngày 7/5/1954 toàn thắng chiến dịch Điện Biên Phủ 'lừng lẫy năm châu, chấn động địa cầu'." },
+      { id: 48, subject: "Địa lý", content: "Việt Nam nằm ở khu vực nào của châu Á?", options: ["Đông Á", "Đông Nam Á", "Nam Á", "Trung Á"], correct: 1, exp: "Việt Nam nằm ở trung tâm khu vực Đông Nam Á." },
+      { id: 49, subject: "Toán học", content: "Số nào sau đây chia hết cho cả 2 và 5?", options: ["125", "132", "150", "153"], correct: 2, exp: "Số có chữ số tận cùng là 0 thì chia hết cho cả 2 và 5." },
+      { id: 50, subject: "Giáo dục công dân", content: "Câu ca dao 'Bầu ơi thương lấy bí cùng / Tuy rằng khác giống nhưng chung một giàn' thể hiện truyền thống gì?", options: ["Hiếu học", "Yêu nước", "Đoàn kết, tương thân tương ái", "Tôn sư trọng đạo"], correct: 2, exp: "Câu ca dao ca ngợi tinh thần đoàn kết, tương thân tương ái của dân tộc Việt Nam." }
+    ];
+
+    // --- 3. WEB AUDIO SYNTHESIZER (ZERO EXTERNAL MP3 DEPENDENCY) ---
+    class GameAudio {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) this.ctx = new AudioContext();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+      playQuack() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(320, now);
+          osc.frequency.exponentialRampToValueAtTime(160, now + 0.16);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.16);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.16);
+        } catch(e){}
+      }
+      playCorrect() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const now = this.ctx.currentTime;
+          [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+            gain.gain.setValueAtTime(0.18, now + idx * 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.32);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(now + idx * 0.08);
+            osc.stop(now + idx * 0.08 + 0.32);
+          });
+        } catch(e){}
+      }
+      playWrong() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(220, now);
+          osc.frequency.linearRampToValueAtTime(110, now + 0.3);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.3);
+        } catch(e){}
+      }
+    }
+    const audio = new GameAudio();
+
+    // --- 4. GAME STATE ---
+    let playerName = '';
+    let className = '';
+    let score = 0;
+    let correctCount = 0;
+    let wrongCount = 0;
+    let timeLeft = 300;
+    let gameTimer = null;
+    let isPlaying = false;
+    let isPaused = false;
+    let visionMode = 'semi'; // 'semi', 'clear', 'full'
+
+    // 50 Ducks
+    let ducks = [];
+    let caughtDuck = null;
+    let currentQuestion = null;
+
+    // Blindfolded Player
+    const player = {
+      x: 50,
+      y: 50,
+      vx: 0,
+      vy: 0,
+      speed: 1.45,
+      angle: 0,
+      reachPhase: 0
+    };
+
+    const keys = { up: false, down: false, left: false, right: false };
+
+    // Canvas
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      if (!canvas) return;
+      const parent = canvas.parentElement;
+      let w = parent ? parent.clientWidth : 0;
+      let h = parent ? parent.clientHeight : 0;
+
+      if (w <= 0) {
+        w = window.innerWidth ? Math.min(window.innerWidth - 32, 1100) : 900;
+      }
+      if (h <= 0) {
+        h = window.innerHeight ? Math.floor(window.innerHeight * 0.58) : 520;
+      }
+
+      if (w > 0 && h > 0) {
+        if (canvas.width !== w || canvas.height !== h) {
+          canvas.width = w;
+          canvas.height = h;
+        }
+      }
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 150));
+
+    // --- 5. INITIALIZE 50 DUCKS ---
+    function initDucks() {
+      ducks = [];
+      for (let i = 1; i <= 50; i++) {
+        const angle = (i / 50) * Math.PI * 2 + (Math.random() - 0.5) * 0.5;
+        const radius = 10 + (i % 5) * 6 + Math.random() * 4;
+        ducks.push({
+          id: i,
+          number: i,
+          x: 50 + Math.cos(angle) * radius,
+          y: 50 + Math.sin(angle) * (radius * 0.75),
+          vx: (Math.random() - 0.5) * 0.45,
+          vy: (Math.random() - 0.5) * 0.45,
+          speed: 0.35 + Math.random() * 0.35,
+          isCaught: false,
+          waddle: Math.random() * Math.PI * 2,
+          bubble: null,
+          bubbleTimer: 0,
+          quackTimer: Math.random() * 6 + 2
+        });
+      }
+      renderDuckBadges();
+    }
+
+    function renderDuckBadges() {
+      const grid = document.getElementById('duckBadgesGrid');
+      grid.innerHTML = '';
+      ducks.forEach(d => {
+        const pill = document.createElement('div');
+        pill.className = `duck-pill ${d.isCaught ? 'caught' : ''}`;
+        pill.innerText = `#${d.number}`;
+        grid.appendChild(pill);
+      });
+      document.getElementById('ducksCaughtCount').innerText = ducks.filter(d => d.isCaught).length;
+    }
+
+    // --- 6. START & END GAME ---
+    function startGame(name, cls) {
+      audio.init();
+      playerName = name;
+      className = cls;
+      score = 0;
+      correctCount = 0;
+      wrongCount = 0;
+      timeLeft = 300;
+      isPlaying = true;
+      isPaused = false;
+
+      player.x = 50;
+      player.y = 50;
+      player.vx = 0;
+      player.vy = 0;
+      player.angle = 0;
+
+      initDucks();
+
+      document.getElementById('startScreen').style.display = 'none';
+      document.getElementById('gameArena').style.display = 'flex';
+      document.getElementById('gameHud').style.display = 'flex';
+      document.getElementById('btnHome').style.display = 'inline-block';
+
+      resizeCanvas();
+      requestAnimationFrame(resizeCanvas);
+      setTimeout(resizeCanvas, 50);
+      setTimeout(resizeCanvas, 200);
+
+      document.getElementById('arenaPlayerName').innerText = playerName;
+      document.getElementById('arenaClassName').innerText = className;
+      document.getElementById('arenaScoreTag').innerText = `${score} điểm`;
+      document.getElementById('hudScore').innerText = score;
+      document.getElementById('hudDucks').innerText = `50/50`;
+      document.getElementById('hudTimer').innerText = '05:00';
+
+      clearInterval(gameTimer);
+      gameTimer = setInterval(() => {
+        if (!isPlaying || isPaused) return;
+        timeLeft--;
+        const mins = Math.floor(timeLeft / 60);
+        const secs = timeLeft % 60;
+        document.getElementById('hudTimer').innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        if (timeLeft <= 0) {
+          endGame();
+        }
+      }, 1000);
+    }
+
+    function showStartScreen() {
+      isPlaying = false;
+      clearInterval(gameTimer);
+      document.getElementById('startScreen').style.display = 'block';
+      document.getElementById('gameArena').style.display = 'none';
+      document.getElementById('gameHud').style.display = 'none';
+      document.getElementById('btnHome').style.display = 'none';
+    }
+
+    function endGame() {
+      isPlaying = false;
+      clearInterval(gameTimer);
+      document.getElementById('gameOverPlayer').innerText = `Người chơi: ${playerName} (${className})`;
+      document.getElementById('gameOverScore').innerText = `${score} ĐIỂM`;
+      document.getElementById('gameOverDetail').innerText = `Đã bắt và trả lời đúng ${correctCount}/50 câu hỏi (+10 điểm / câu đúng)`;
+      document.getElementById('gameOverModal').style.display = 'flex';
+
+      try {
+        const saved = JSON.parse(localStorage.getItem('bit_mat_bat_vit_lb_v2') || '[]');
+        saved.push({
+          name: playerName,
+          cls: className,
+          score: score,
+          correct: correctCount,
+          date: new Date().toLocaleDateString('vi-VN')
+        });
+        saved.sort((a, b) => b.score - a.score);
+        localStorage.setItem('bit_mat_bat_vit_lb_v2', JSON.stringify(saved.slice(0, 30)));
+      } catch(e){}
+
+      if (window.confetti) {
+        try { confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } }); } catch(e){}
+      }
+    }
+
+    // --- 7. CATCH DUCK & QUESTION POPUP ---
+    function handleCatchDuck(duck) {
+      if (isPaused || !isPlaying) return;
+      isPaused = true;
+      caughtDuck = duck;
+      audio.playQuack();
+
+      const qIndex = (duck.number - 1) % QUESTIONS_BANK.length;
+      currentQuestion = QUESTIONS_BANK[qIndex];
+
+      document.getElementById('qModalDuckBadge').innerText = `#${duck.number}`;
+      document.getElementById('qModalDuckTag').innerText = `CÂU HỎI CHÚ VỊT SỐ #${duck.number}`;
+      document.getElementById('qModalSubject').innerText = `Môn: ${currentQuestion.subject}`;
+      document.getElementById('qModalContent').innerText = currentQuestion.content;
+
+      const optsDiv = document.getElementById('qModalOptions');
+      optsDiv.innerHTML = '';
+      const feedback = document.getElementById('qModalFeedback');
+      feedback.style.display = 'none';
+      const continueBtn = document.getElementById('qModalContinueBtn');
+      continueBtn.style.display = 'none';
+
+      const labels = ['A', 'B', 'C', 'D'];
+      currentQuestion.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'btn-option';
+        btn.innerHTML = `<span class="opt-letter">${labels[idx]}</span> <span>${opt}</span>`;
+        btn.onclick = () => answerQuestion(idx);
+        optsDiv.appendChild(btn);
+      });
+
+      document.getElementById('questionModal').style.display = 'flex';
+    }
+
+    function answerQuestion(selectedIdx) {
+      const isCorrect = selectedIdx === currentQuestion.correct;
+      const opts = document.getElementById('qModalOptions').children;
+
+      for (let i = 0; i < opts.length; i++) {
+        opts[i].disabled = true;
+        if (i === currentQuestion.correct) {
+          opts[i].className = 'btn-option correct';
+        } else if (i === selectedIdx) {
+          opts[i].className = 'btn-option wrong';
+        } else {
+          opts[i].className = 'btn-option dimmed';
+        }
+      }
+
+      const feedback = document.getElementById('qModalFeedback');
+      feedback.style.display = 'block';
+
+      if (isCorrect) {
+        audio.playCorrect();
+        correctCount++;
+        score = correctCount * 10;
+        feedback.className = 'feedback-box correct';
+        feedback.innerHTML = `🎉 <strong>CHÍNH XÁC! Bạn được cộng +10 điểm!</strong><br><span style="font-size: 12px;">${currentQuestion.exp || ''}</span>`;
+        if (window.confetti) {
+          try { confetti({ particleCount: 90, spread: 70, origin: { y: 0.6 } }); } catch(e){}
+        }
+        caughtDuck.isCaught = true;
+      } else {
+        audio.playWrong();
+        wrongCount++;
+        feedback.className = 'feedback-box wrong';
+        feedback.innerHTML = `❌ <strong>CHƯA ĐÚNG! Chú vịt số #${caughtDuck.number} đã chạy thoát!</strong><br><span style="font-size: 12px;">Đáp án đúng là ${['A','B','C','D'][currentQuestion.correct]}: ${currentQuestion.options[currentQuestion.correct]}.</span>`;
+        const fleeAngle = Math.random() * Math.PI * 2;
+        caughtDuck.vx = Math.cos(fleeAngle) * 1.5;
+        caughtDuck.vy = Math.sin(fleeAngle) * 1.5;
+        caughtDuck.bubble = `Vịt #${caughtDuck.number} chạy thoát!`;
+        caughtDuck.bubbleTimer = 2.5;
+      }
+
+      document.getElementById('arenaScoreTag').innerText = `${score} điểm`;
+      document.getElementById('hudScore').innerText = score;
+      const remaining = ducks.filter(d => !d.isCaught).length;
+      document.getElementById('hudDucks').innerText = `${remaining}/50`;
+      renderDuckBadges();
+
+      const continueBtn = document.getElementById('qModalContinueBtn');
+      continueBtn.style.display = 'block';
+      continueBtn.onclick = () => {
+        document.getElementById('questionModal').style.display = 'none';
+        isPaused = false;
+        if (ducks.filter(d => !d.isCaught).length === 0) {
+          endGame();
+        }
+      };
+    }
+
+    // --- 8. INPUT CONTROLS ---
+    window.addEventListener('keydown', (e) => {
+      const code = e.code;
+      const key = e.key ? e.key.toLowerCase() : '';
+      if (code === 'KeyW' || code === 'ArrowUp' || key === 'w' || key === 'arrowup' || key === 'ư') keys.up = true;
+      if (code === 'KeyS' || code === 'ArrowDown' || key === 's' || key === 'arrowdown') keys.down = true;
+      if (code === 'KeyA' || code === 'ArrowLeft' || key === 'a' || key === 'arrowleft') keys.left = true;
+      if (code === 'KeyD' || code === 'ArrowRight' || key === 'd' || key === 'arrowright') keys.right = true;
+    });
+
+    window.addEventListener('keyup', (e) => {
+      const code = e.code;
+      const key = e.key ? e.key.toLowerCase() : '';
+      if (code === 'KeyW' || code === 'ArrowUp' || key === 'w' || key === 'arrowup' || key === 'ư') keys.up = false;
+      if (code === 'KeyS' || code === 'ArrowDown' || key === 's' || key === 'arrowdown') keys.down = false;
+      if (code === 'KeyA' || code === 'ArrowLeft' || key === 'a' || key === 'arrowleft') keys.left = false;
+      if (code === 'KeyD' || code === 'ArrowRight' || key === 'd' || key === 'arrowright') keys.right = false;
+    });
+
+    function bindDpad(id, dir) {
+      const btn = document.getElementById(id);
+      if (!btn) return;
+      const on = (e) => { e.preventDefault(); keys[dir] = true; };
+      const off = (e) => { e.preventDefault(); keys[dir] = false; };
+      btn.addEventListener('mousedown', on);
+      btn.addEventListener('mouseup', off);
+      btn.addEventListener('touchstart', on);
+      btn.addEventListener('touchend', off);
+    }
+    bindDpad('touchUp', 'up');
+    bindDpad('touchDown', 'down');
+    bindDpad('touchLeft', 'left');
+    bindDpad('touchRight', 'right');
+
+    canvas.addEventListener('pointerdown', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const px = ((e.clientX - rect.left) / rect.width) * 100;
+      const py = ((e.clientY - rect.top) / rect.height) * 100;
+      const dx = px - player.x;
+      const dy = py - player.y;
+      player.angle = Math.atan2(dy, dx);
+      player.vx = Math.cos(player.angle) * player.speed;
+      player.vy = Math.sin(player.angle) * player.speed;
+    });
+
+    // Vision mode buttons
+    function setVision(mode) {
+      visionMode = mode;
+      document.getElementById('btnVisionSemi').className = `btn-vision ${mode === 'semi' ? 'active' : ''}`;
+      document.getElementById('btnVisionClear').className = `btn-vision ${mode === 'clear' ? 'active' : ''}`;
+      document.getElementById('btnVisionFull').className = `btn-vision ${mode === 'full' ? 'active' : ''}`;
+    }
+    document.getElementById('btnVisionSemi').onclick = () => setVision('semi');
+    document.getElementById('btnVisionClear').onclick = () => setVision('clear');
+    document.getElementById('btnVisionFull').onclick = () => setVision('full');
+
+    // Header buttons
+    document.getElementById('btnSound').onclick = () => {
+      audio.enabled = !audio.enabled;
+      document.getElementById('btnSound').innerText = audio.enabled ? '🔊' : '🔇';
+    };
+
+    document.getElementById('btnRules').onclick = () => {
+      document.getElementById('rulesModal').style.display = 'flex';
+    };
+
+    document.getElementById('btnLeaderboard').onclick = () => {
+      const list = document.getElementById('leaderboardList');
+      list.innerHTML = '';
+      const saved = JSON.parse(localStorage.getItem('bit_mat_bat_vit_lb_v2') || '[]');
+      if (saved.length === 0) {
+        list.innerHTML = '<p style="text-align: center; color: #64748b; font-size: 13px; padding: 20px;">Chưa có điểm nào được lưu. Hãy là người đầu tiên ghi điểm!</p>';
+      } else {
+        saved.forEach((item, idx) => {
+          const row = document.createElement('div');
+          row.style.display = 'flex';
+          row.style.justifyContent = 'space-between';
+          row.style.alignItems = 'center';
+          row.style.padding = '8px 12px';
+          row.style.borderRadius = '10px';
+          row.style.background = '#fef3c7';
+          row.style.border = '1px solid #fcd34d';
+          row.style.fontSize = '13px';
+          row.style.fontWeight = '700';
+          row.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="width: 24px; height: 24px; border-radius: 999px; background: ${idx < 3 ? '#d97706' : '#cbd5e1'}; color: ${idx < 3 ? '#fff' : '#334155'}; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900;">${idx + 1}</span>
+              <div>
+                <span style="color: #1e293b;">${item.name}</span>
+                <span style="color: #64748b; font-size: 11px;">(${item.cls})</span>
+              </div>
+            </div>
+            <span style="color: #b45309; font-family: monospace; font-size: 15px; font-weight: 900;">${item.score} đ</span>
+          `;
+          list.appendChild(row);
+        });
+      }
+      document.getElementById('leaderboardModal').style.display = 'flex';
+    };
+
+    document.getElementById('btnHome').onclick = () => {
+      if (confirm('Quay về trang chủ? Lượt chơi hiện tại sẽ dừng lại.')) {
+        showStartScreen();
+      }
+    };
+
+    document.getElementById('btnPlayAgain').onclick = () => {
+      document.getElementById('gameOverModal').style.display = 'none';
+      startGame(playerName, className);
+    };
+
+    // Download & Copy helpers
+    function downloadCurrentHtml(filename) {
+      const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+      const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(a.href);
+    }
+
+    function copyHtmlCode(btn) {
+      const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+      navigator.clipboard.writeText(html).then(() => {
+        const orig = btn.innerText;
+        btn.innerText = '✅ Đã chép!';
+        setTimeout(() => { btn.innerText = orig; }, 2000);
+      }).catch(() => {
+        alert('Đã sao chép! Bạn có thể dán vào file HTML trên máy.');
+      });
+    }
+
+    const btnDl1 = document.getElementById('btnDownloadHtml');
+    if (btnDl1) btnDl1.onclick = () => downloadCurrentHtml('tro_choi_bit_mat_bat_vit.html');
+    const btnDl2 = document.getElementById('btnDownloadGithub');
+    if (btnDl2) btnDl2.onclick = () => downloadCurrentHtml('index.html');
+
+    document.getElementById('startForm').onsubmit = (e) => {
+      e.preventDefault();
+      const n = document.getElementById('inputPlayerName').value.trim();
+      const c = document.getElementById('inputClassName').value.trim();
+      if (!n || !c) return;
+      startGame(n, c);
+    };
+
+    // --- 9. ANIMATION LOOP ---
+    let lastTime = performance.now();
+
+    function gameLoop(time) {
+      const dt = Math.min((time - lastTime) / 1000, 0.1);
+      lastTime = time;
+
+      if (isPlaying && !isPaused) {
+        // Player movement
+        let moveX = 0;
+        let moveY = 0;
+        if (keys.up) moveY -= 1;
+        if (keys.down) moveY += 1;
+        if (keys.left) moveX -= 1;
+        if (keys.right) moveX += 1;
+
+        if (moveX !== 0 || moveY !== 0) {
+          const len = Math.hypot(moveX, moveY);
+          player.vx = (moveX / len) * player.speed;
+          player.vy = (moveY / len) * player.speed;
+          player.angle = Math.atan2(player.vy, player.vx);
+          player.reachPhase += dt * 10;
+        } else {
+          player.vx *= 0.85;
+          player.vy *= 0.85;
+          player.reachPhase += dt * 3;
+        }
+
+        player.x += player.vx * dt * 25;
+        player.y += player.vy * dt * 25;
+
+        // Ellipse boundaries (center 50, 50; rx=41, ry=34)
+        const dxP = (player.x - 50) / 41;
+        const dyP = (player.y - 50) / 34;
+        if (dxP * dxP + dyP * dyP > 1) {
+          const bAng = Math.atan2(dyP, dxP);
+          player.x = 50 + Math.cos(bAng) * 40.5;
+          player.y = 50 + Math.sin(bAng) * 33.5;
+        }
+
+        // Ducks movement
+        ducks.forEach(d => {
+          if (d.isCaught) return;
+
+          d.quackTimer -= dt;
+          if (d.quackTimer <= 0) {
+            d.quackTimer = Math.random() * 8 + 4;
+            d.bubble = `Vịt #${d.number} cạp!`;
+            d.bubbleTimer = 1.8;
+            audio.playQuack();
+          }
+
+          if (d.bubbleTimer > 0) {
+            d.bubbleTimer -= dt;
+            if (d.bubbleTimer <= 0) d.bubble = null;
+          }
+
+          const distToPlayer = Math.hypot(d.x - player.x, d.y - player.y);
+          if (distToPlayer < 12) {
+            const awayAngle = Math.atan2(d.y - player.y, d.x - player.x);
+            d.vx = Math.cos(awayAngle) * (d.speed * 1.8);
+            d.vy = Math.sin(awayAngle) * (d.speed * 1.8);
+          } else {
+            d.vx += (Math.random() - 0.5) * 0.08;
+            d.vy += (Math.random() - 0.5) * 0.08;
+            const spd = Math.hypot(d.vx, d.vy);
+            if (spd > d.speed) {
+              d.vx = (d.vx / spd) * d.speed;
+              d.vy = (d.vy / spd) * d.speed;
+            }
+          }
+
+          d.x += d.vx * dt * 25;
+          d.y += d.vy * dt * 25;
+          d.waddle += dt * 8;
+
+          // Duck yard bounds bounce
+          const ddx = (d.x - 50) / 41;
+          const ddy = (d.y - 50) / 34;
+          if (ddx * ddx + ddy * ddy > 1) {
+            const bAngle = Math.atan2(dddy, ddx);
+            d.x = 50 + Math.cos(bAngle) * 40.5;
+            d.y = 50 + Math.sin(bAngle) * 33.5;
+            d.vx = -d.vx * 0.8;
+            d.vy = -d.vy * 0.8;
+          }
+
+          // Catch collision (within 4.2% yard distance)
+          if (distToPlayer < 4.2) {
+            handleCatchDuck(d);
+          }
+        });
+      }
+
+      // Safe render
+      try {
+        renderScene();
+      } catch (e) {
+        console.error("Render error:", e);
+      }
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    // --- 10. SCENE RENDERING ---
+    function renderScene() {
+      let w = canvas.width;
+      let h = canvas.height;
+      if (!w || !h || w <= 0 || h <= 0) {
+        resizeCanvas();
+        w = canvas.width = 900;
+        h = canvas.height = 520;
+      }
+
+      ctx.clearRect(0, 0, w, h);
+
+      const cx = w * 0.5;
+      const cy = h * 0.5;
+      const rx = w * 0.44;
+      const ry = h * 0.40;
+
+      // 1. Lush Green Village Grass Lawn
+      const grassGrad = ctx.createRadialGradient(cx, cy, ry * 0.8, cx, cy, w * 0.65);
+      grassGrad.addColorStop(0, '#5fa348');
+      grassGrad.addColorStop(1, '#3b7a27');
+      ctx.fillStyle = grassGrad;
+      ctx.fillRect(0, 0, w, h);
+
+      // 2. Village Surroundings Outside Yard
+      // Red Tiled Roof House (top-left)
+      const hx = w * 0.12;
+      const hy = h * 0.12;
+      ctx.save();
+      ctx.fillStyle = '#e2d3b3';
+      ctx.fillRect(hx - 50, hy, 100, 45);
+      ctx.fillStyle = '#78350f';
+      ctx.fillRect(hx - 45, hy + 5, 8, 40);
+      ctx.fillRect(hx + 37, hy + 5, 8, 40);
+      ctx.beginPath();
+      ctx.moveTo(hx - 65, hy + 8);
+      ctx.quadraticCurveTo(hx, hy - 32, hx + 65, hy + 8);
+      ctx.lineTo(hx + 55, hy - 4);
+      ctx.quadraticCurveTo(hx, hy - 36, hx - 55, hy - 4);
+      ctx.closePath();
+      ctx.fillStyle = '#b91c1c';
+      ctx.fill();
+      ctx.strokeStyle = '#7f1d1d';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+      ctx.restore();
+
+      // Straw Thatched Hut (top-right)
+      const tx = w * 0.88;
+      const ty = h * 0.14;
+      ctx.save();
+      ctx.fillStyle = '#c2b08b';
+      ctx.fillRect(tx - 40, ty, 80, 40);
+      ctx.beginPath();
+      ctx.moveTo(tx - 55, ty + 6);
+      ctx.lineTo(tx, ty - 32);
+      ctx.lineTo(tx + 55, ty + 6);
+      ctx.closePath();
+      ctx.fillStyle = '#ca8a04';
+      ctx.fill();
+      ctx.strokeStyle = '#854d0e';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.restore();
+
+      // Golden Haystack (bottom-right)
+      const hx2 = w * 0.89;
+      const hy2 = h * 0.80;
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(hx2, hy2 + 10, 32, Math.PI, 0, false);
+      ctx.lineTo(hx2 + 34, hy2 + 28);
+      ctx.lineTo(hx2 - 34, hy2 + 28);
+      ctx.closePath();
+      ctx.fillStyle = '#eab308';
+      ctx.fill();
+      ctx.strokeStyle = '#a16207';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+      ctx.fillStyle = '#78350f';
+      ctx.fillRect(hx2 - 2, hy2 - 28, 4, 55);
+      ctx.restore();
+
+      // Terracotta Water Jar (Chum nước đất nung) bottom-left
+      const jx = w * 0.11;
+      const jy = h * 0.80;
+      ctx.save();
+      drawSafeEllipse(ctx, jx, jy, 20, 25);
+      ctx.fillStyle = '#9a3412';
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#431407';
+      ctx.stroke();
+      drawSafeEllipse(ctx, jx, jy - 22, 12, 4);
+      ctx.fillStyle = '#c2410c';
+      ctx.fill();
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(jx + 2, jy - 22);
+      ctx.lineTo(jx + 22, jy - 35);
+      ctx.strokeStyle = '#d97706';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      ctx.restore();
+
+      // 3. Earthen Courtyard (Sân gạch đất nện)
+      ctx.save();
+      drawSafeEllipse(ctx, cx, cy, rx, ry);
+      const yardGrad = ctx.createRadialGradient(cx, cy * 0.9, 20, cx, cy, rx);
+      yardGrad.addColorStop(0, '#e8b87d');
+      yardGrad.addColorStop(0.7, '#d49e5b');
+      yardGrad.addColorStop(1, '#b97f3e');
+      ctx.fillStyle = yardGrad;
+      ctx.fill();
+      ctx.lineWidth = 7;
+      ctx.strokeStyle = '#8c531b';
+      ctx.stroke();
+      ctx.restore();
+
+      // Bamboo fence posts around rim
+      const postCount = 28;
+      for (let i = 0; i < postCount; i++) {
+        const th = (i / postCount) * Math.PI * 2;
+        const fx = cx + Math.cos(th) * rx;
+        const fy = cy + Math.sin(th) * ry;
+        ctx.fillStyle = '#b45309';
+        ctx.fillRect(fx - 3, fy - 12, 6, 18);
+        ctx.fillStyle = '#78350f';
+        ctx.fillRect(fx - 4, fy - 5, 8, 2);
+      }
+
+      // 4. Render Ducks
+      const pxX = (player.x / 100) * w;
+      const pxY = (player.y / 100) * h;
+
+      ducks.forEach(d => {
+        if (d.isCaught) return;
+        const dx = (d.x / 100) * w;
+        const dy = (d.y / 100) * h;
+
+        let alpha = 1.0;
+        if (visionMode === 'full') {
+          const dist = Math.hypot(dx - pxX, dy - pxY);
+          alpha = dist < 70 ? 0.95 : (d.bubble ? 0.8 : 0.08);
+        } else if (visionMode === 'semi') {
+          const dist = Math.hypot(dx - pxX, dy - pxY);
+          alpha = dist < 140 ? 1.0 : Math.max(0.2, 1 - (dist - 140) / 160);
+        }
+
+        ctx.save();
+        ctx.globalAlpha = alpha;
+
+        // Duck body translation
+        ctx.save();
+        ctx.translate(dx, dy);
+
+        // Waddling tilt
+        const waddle = Math.sin(d.waddle) * 0.12;
+        ctx.rotate(waddle);
+
+        // Shadow
+        drawSafeEllipse(ctx, 0, 14, 14, 5);
+        ctx.fillStyle = 'rgba(0,0,0,0.2)';
+        ctx.fill();
+
+        // Feet
+        ctx.fillStyle = '#ea580c';
+        drawSafeEllipse(ctx, -6, 13, 4, 2.5);
+        ctx.fill();
+        drawSafeEllipse(ctx, 6, 13, 4, 2.5);
+        ctx.fill();
+
+        // Chubby Body
+        drawSafeEllipse(ctx, 0, 3, 16, 12);
+        ctx.fillStyle = '#facc15';
+        ctx.fill();
+        ctx.strokeStyle = '#ca8a04';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Red Number Badge #1 to #50 on duck body
+        ctx.beginPath();
+        ctx.arc(-2, 3, 7.5, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+        ctx.strokeStyle = '#dc2626';
+        ctx.lineWidth = 1.4;
+        ctx.stroke();
+
+        ctx.fillStyle = '#dc2626';
+        ctx.font = 'bold 9px Arial, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(d.number, -2, 3.5);
+
+        // Head
+        ctx.beginPath();
+        ctx.arc(8, -8, 9, 0, Math.PI * 2);
+        ctx.fillStyle = '#facc15';
+        ctx.fill();
+        ctx.stroke();
+
+        // Eye
+        ctx.beginPath();
+        ctx.arc(11, -9, 2.2, 0, Math.PI * 2);
+        ctx.fillStyle = '#0f172a';
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(11.8, -9.8, 0.8, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+
+        // Beak
+        ctx.beginPath();
+        ctx.moveTo(15, -9);
+        ctx.lineTo(22, -6);
+        ctx.lineTo(15, -4);
+        ctx.closePath();
+        ctx.fillStyle = '#f97316';
+        ctx.fill();
+        ctx.strokeStyle = '#ea580c';
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+
+        ctx.restore();
+
+        // Tag above duck: "Vịt #N"
+        const tagText = `Vịt #${d.number}`;
+        ctx.font = 'bold 10px Arial, sans-serif';
+        const tw = ctx.measureText(tagText).width + 12;
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
+        drawSafeRoundRect(ctx, dx - tw / 2, dy - 28, tw, 16, 5);
+        ctx.fill();
+        ctx.fillStyle = '#fef08a';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(tagText, dx, dy - 20);
+
+        // Speech bubble
+        if (d.bubble) {
+          ctx.font = 'bold 11px Arial, sans-serif';
+          const bw = ctx.measureText(d.bubble).width + 16;
+          ctx.fillStyle = '#ffffff';
+          ctx.strokeStyle = '#f59e0b';
+          ctx.lineWidth = 2;
+          drawSafeRoundRect(ctx, dx - bw / 2, dy - 56, bw, 22, 8);
+          ctx.fill();
+          ctx.stroke();
+          ctx.fillStyle = '#78350f';
+          ctx.fillText(d.bubble, dx, dy - 45);
+        }
+
+        ctx.restore();
+      });
+
+      // 5. Blindfolded Player (NO RED BOX/NAME TAG ON HEAD)
+      ctx.save();
+      ctx.translate(pxX, pxY);
+
+      // Shadow
+      drawSafeEllipse(ctx, 0, 18, 18, 6);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
+      ctx.fill();
+
+      // Arms reaching forward (quờ quạng tìm vịt)
+      const reach = Math.sin(player.reachPhase) * 6;
+      const leftArmAngle = player.angle - 0.35;
+      const rightArmAngle = player.angle + 0.35;
+      ctx.strokeStyle = '#d97706';
+      ctx.lineWidth = 5;
+      ctx.lineCap = 'round';
+
+      ctx.beginPath();
+      ctx.moveTo(0, -4);
+      ctx.lineTo(Math.cos(leftArmAngle) * (20 + reach), Math.sin(leftArmAngle) * (20 + reach) - 4);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(0, -4);
+      ctx.lineTo(Math.cos(rightArmAngle) * (20 - reach * 0.5), Math.sin(rightArmAngle) * (20 - reach * 0.5) - 4);
+      ctx.stroke();
+
+      // Body (Rose Blouse)
+      drawSafeEllipse(ctx, 0, 3, 13, 15);
+      ctx.fillStyle = '#e11d48';
+      ctx.fill();
+      ctx.strokeStyle = '#be123c';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      // Head
+      ctx.beginPath();
+      ctx.arc(0, -16, 12, 0, Math.PI * 2);
+      ctx.fillStyle = '#fde68a';
+      ctx.fill();
+      ctx.strokeStyle = '#d97706';
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+
+      // Hair
+      ctx.beginPath();
+      ctx.arc(0, -19, 12, Math.PI, 0, false);
+      ctx.fillStyle = '#18181b';
+      ctx.fill();
+
+      // RED BLINDFOLD BANDANA (Khăn đỏ bịt mắt) - No text on head!
+      ctx.fillStyle = '#dc2626';
+      drawSafeRoundRect(ctx, -13, -19, 26, 7, 2);
+      ctx.fill();
+
+      // Ribbon knot at side
+      ctx.beginPath();
+      ctx.moveTo(11, -17);
+      ctx.lineTo(17, -12);
+      ctx.lineTo(13, -8);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.restore();
+
+      // 6. Blindfold fog overlay (Semi or Full)
+      if (visionMode !== 'clear') {
+        const radius = visionMode === 'full' ? 80 : 180;
+        const grad = ctx.createRadialGradient(pxX, pxY, radius * 0.45, pxX, pxY, radius * 1.35);
+        grad.addColorStop(0, 'rgba(0, 0, 0, 0)');
+        grad.addColorStop(0.7, visionMode === 'full' ? 'rgba(15, 23, 42, 0.88)' : 'rgba(15, 23, 42, 0.4)');
+        grad.addColorStop(1, visionMode === 'full' ? 'rgba(15, 23, 42, 0.97)' : 'rgba(15, 23, 42, 0.7)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, w, h);
+      }
+    }
+
+    // --- 11. START THE LOOP & INITIAL RESIZE ---
+    resizeCanvas();
+    requestAnimationFrame(gameLoop);
+  </script>
+</body>
+</html>
